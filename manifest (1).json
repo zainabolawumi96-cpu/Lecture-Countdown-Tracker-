@@ -1,0 +1,10 @@
+{
+  "name": "Lecture Countdown Tracker",
+  "short_name": "Lecture Tracker",
+  "description": "Track lectures, examinations and assignments with countdowns and reminders.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#F4EAFB",
+  "theme_color": "#542477",
+  "orientation": "portrait"
+}

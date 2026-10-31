@@ -1,0 +1,673 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="manifest" href="manifest.json">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lecture Countdown Tracker</title>
+
+<style>
+* { box-sizing: border-box; }
+
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #F4EAFB;
+  color: #542477;
+}
+
+
+
+header {
+  background: #542477;
+  color: white;
+  padding: 24px 18px;
+}
+
+
+header h1 { margin: 0; font-size: 23px; }
+header p { color: #bfdbfe; margin-bottom: 0; }
+
+main {
+  max-width: 750px;
+  margin: auto;
+  padding: 18px;
+}
+
+h2 { font-size: 19px; }
+
+.card {
+  background: white;
+  padding: 18px;
+  border-radius: 14px;
+  margin-bottom: 18px;
+  box-shadow: 0 3px 12px #00000010;
+}
+
+
+.countdown {
+  background: #542477;
+  color: white;
+  text-align: center;
+}
+
+#timer {
+  font-size: clamp(25px, 7vw, 38px);
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+
+.stat {
+  background: #FFFFFF;
+  color: #542477;
+  padding: 14px 5px;
+  text-align: center;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px #00000010;
+  border: 1px solid #D9B6EA;
+}
+
+.stat strong {
+  display: block;
+  font-size: 27px;
+  margin-bottom: 5px;
+  color: #542477;
+}
+
+
+.blue { color: #2563eb; }
+.green { color: #16a34a; }
+.orange { color: #d97706; }
+
+input, select {
+  width: 100%;
+  padding: 13px;
+  margin: 8px 0 15px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 15px;
+  background: white;
+}
+
+button {
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  background: #542477;
+  color: #FFFFFF;
+}
+.primary {
+  background: #542477;
+  color: #FFFFFF;
+  width: 100%;
+}
+
+.activity {
+  background: #FFFFFF;
+  border-left: 4px solid #542477;
+  padding: 13px;
+  margin: 12px 0;
+  border-radius: 7px;
+  border: 1px solid #D9B6EA;
+}
+
+.activity p {
+  color: #542477;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.edit {
+  background: #542477;
+  color: #FFFFFF;
+  flex: 1;
+}
+
+.delete {
+  background: #542477;
+  color: #FFFFFF;
+  flex: 1;
+}
+
+.empty {
+  color: #64748b;
+  text-align: center;
+  padding: 15px;
+}
+
+.notice {
+  background: #F4EAFB;
+  color: #542477;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  border: 1px solid #D9B6EA;
+}
+footer {
+  text-align: center;
+  padding: 20px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+ <h1>📚 Lecture Countdown Tracker</h1>
+
+<p>Stay Prepared. Stay Organized. Stay Ahead.</p>
+
+<p>Keep track of your lectures, examinations and assignments with real-time countdowns and timely reminders.</p>
+
+</header>
+<main>
+
+<section class="card">
+  <h2>Welcome, Student! 👋</h2>
+  <p id="today"></p>
+  <p>Stay organized and never miss an academic activity.</p>
+</section>
+
+<section class="stats">
+
+  <div class="stat">
+    <strong class="blue" id="lectureCount">0</strong>
+    <small>Lectures</small>
+  </div>
+
+  <div class="stat">
+    <strong class="green" id="examCount">0</strong>
+    <small>Exams</small>
+  </div>
+
+  <div class="stat">
+    <strong class="orange" id="assignmentCount">0</strong>
+    <small>Assignments</small>
+  </div>
+
+</section>
+
+<section class="card countdown">
+
+  <h2 id="nextTitle">Your Next Activity</h2>
+
+  <p id="nextInfo">Add your first activity below.</p>
+
+  <div id="timer">00d 00h 00m 00s</div>
+
+  <p>TIME REMAINING</p>
+
+</section>
+
+<section class="card">
+
+  <h2>➕ Add New Activity</h2>
+
+  <form id="activityForm">
+
+    <label>Activity Title</label>
+    <input id="title" type="text"
+      placeholder="e.g. SEN 203" required>
+
+    <label>Activity Type</label>
+    <select id="type">
+      <option>Lecture</option>
+      <option>Examination</option>
+      <option>Assignment</option>
+    </select>
+
+    <label>Date</label>
+    <input id="date" type="date" required>
+
+    <label>Time</label>
+    <input id="time" type="time" required>
+
+    <label>Venue / Description</label>
+    <input id="venue" type="text"
+      placeholder="e.g. Engineering Auditorium">
+
+    <button class="primary" id="saveButton" type="submit">
+      Save Activity
+    </button>
+
+    <button class="delete" id="cancelButton"
+      type="button" hidden onclick="cancelEdit()">
+      Cancel Edit
+    </button>
+
+  </form>
+
+</section>
+
+<section class="card">
+
+  <h2>📅 My Activities</h2>
+
+  <select id="filter" onchange="displayActivities()">
+    <option value="All">All Activities</option>
+    <option value="Lecture">Lectures</option>
+    <option value="Examination">Examinations</option>
+    <option value="Assignment">Assignments</option>
+  </select>
+
+  <div id="activityList"></div>
+
+</section>
+
+<section class="card">
+
+  <h2>🗓️ Upcoming 7 Days</h2>
+
+  <div id="weeklyList"></div>
+
+</section>
+
+<section class="card">
+
+  <h2>🔔 Reminders</h2>
+
+  <p>Receive a browser notification 10 minutes before an activity.</p>
+
+  
+<p id="notificationStatus" class="notice">
+  In-App Reminders Active! Keep the app open to receive alerts when your activities are 10 minutes away.
+</p>
+
+</section>
+
+</main>
+
+<footer>
+  Lecture Countdown Tracker © 2026
+  <br>Developed for student academic time management.
+</footer>
+
+<script>
+
+let activities = JSON.parse(
+  localStorage.getItem("activities") || "[]"
+);
+
+let editingId = null;
+
+let notified = JSON.parse(
+  localStorage.getItem("notified") || "[]"
+);
+
+function saveActivities() {
+  localStorage.setItem(
+    "activities",
+    JSON.stringify(activities)
+  );
+}
+
+function getDate(item) {
+  return new Date(item.datetime);
+}
+
+function updateDashboard() {
+
+  document.getElementById("lectureCount").textContent =
+    activities.filter(a => a.type === "Lecture").length;
+
+  document.getElementById("examCount").textContent =
+    activities.filter(a => a.type === "Examination").length;
+
+  document.getElementById("assignmentCount").textContent =
+    activities.filter(a => a.type === "Assignment").length;
+
+}
+
+function displayActivities() {
+
+  const list = document.getElementById("activityList");
+
+  list.innerHTML = "";
+
+  const filter = document.getElementById("filter").value;
+
+  const sorted = [...activities]
+    .filter(a => filter === "All" || a.type === filter)
+    .sort((a,b) => getDate(a) - getDate(b));
+
+  if (sorted.length === 0) {
+    list.innerHTML = '<p class="empty">No activities found.</p>';
+    return;
+  }
+
+  sorted.forEach(item => {
+
+    const div = document.createElement("div");
+    div.className = "activity";
+
+    const title = document.createElement("strong");
+    title.textContent = item.title;
+
+    const details = document.createElement("p");
+    details.textContent =
+      item.type + " | " +
+      getDate(item).toLocaleString() +
+      " | " + (item.venue || "No venue added");
+
+    const actions = document.createElement("div");
+    actions.className = "actions";
+
+    const edit = document.createElement("button");
+    edit.className = "edit";
+    edit.textContent = "Edit";
+
+    edit.onclick = () => editActivity(item.id);
+
+    const del = document.createElement("button");
+    del.className = "delete";
+    del.textContent = "Delete";
+
+    del.onclick = () => deleteActivity(item.id);
+
+    actions.append(edit, del);
+    div.append(title, details, actions);
+    list.appendChild(div);
+
+  });
+
+}
+
+function displayWeekly() {
+
+  const weekly = document.getElementById("weeklyList");
+
+  weekly.innerHTML = "";
+
+  const now = new Date();
+  const end = new Date();
+
+  end.setDate(end.getDate() + 7);
+
+  const upcoming = activities
+    .filter(a => getDate(a) > now && getDate(a) <= end)
+    .sort((a,b) => getDate(a) - getDate(b));
+
+  if (upcoming.length === 0) {
+    weekly.innerHTML =
+      '<p class="empty">No activities in the next 7 days.</p>';
+    return;
+  }
+
+  upcoming.forEach(item => {
+
+    const div = document.createElement("div");
+    div.className = "activity";
+
+    const strong = document.createElement("strong");
+    strong.textContent = item.title;
+
+    const p = document.createElement("p");
+    p.textContent =
+      item.type + " - " + getDate(item).toLocaleString();
+
+    div.append(strong, p);
+    weekly.appendChild(div);
+
+  });
+
+}
+
+function updateCountdown() {
+
+  const now = new Date();
+
+  const upcoming = activities
+    .filter(a => getDate(a) > now)
+    .sort((a,b) => getDate(a) - getDate(b));
+
+  if (upcoming.length === 0) {
+
+    document.getElementById("nextTitle").textContent =
+      "No Upcoming Activities";
+
+    document.getElementById("nextInfo").textContent =
+      "Add your next lecture, exam or assignment.";
+
+    document.getElementById("timer").textContent =
+      "00d 00h 00m 00s";
+
+    return;
+  }
+
+  const next = upcoming[0];
+
+  const difference = getDate(next).getTime() - now.getTime();
+
+  const days = Math.floor(difference / 86400000);
+  const hours = Math.floor((difference % 86400000) / 3600000);
+  const minutes = Math.floor((difference % 3600000) / 60000);
+  const seconds = Math.floor((difference % 60000) / 1000);
+
+  document.getElementById("nextTitle").textContent =
+    next.title;
+
+  document.getElementById("nextInfo").textContent =
+    next.type + " | " + getDate(next).toLocaleString();
+
+  document.getElementById("timer").textContent =
+    days + "d " + hours + "h " +
+    minutes + "m " + seconds + "s";
+
+}
+
+function refreshDashboard() {
+  updateDashboard();
+  displayActivities();
+  displayWeekly();
+  updateCountdown();
+}
+
+document.getElementById("activityForm")
+.addEventListener("submit", function(e) {
+
+  e.preventDefault();
+
+  const datetime =
+    document.getElementById("date").value + "T" +
+    document.getElementById("time").value;
+
+  if (new Date(datetime) <= new Date()) {
+    alert("Please choose a future date and time.");
+    return;
+  }
+
+  const data = {
+    title: document.getElementById("title").value.trim(),
+    type: document.getElementById("type").value,
+    datetime: datetime,
+    venue: document.getElementById("venue").value.trim()
+  };
+
+  if (editingId !== null) {
+
+    const index = activities.findIndex(a => a.id === editingId);
+
+    if (index !== -1) {
+      activities[index] = {
+        ...activities[index],
+        ...data
+      };
+    }
+
+    editingId = null;
+
+  } else {
+
+    activities.push({
+      id: Date.now().toString() + Math.random().toString(36).slice(2),
+      ...data
+    });
+
+  }
+
+  saveActivities();
+
+  this.reset();
+
+  document.getElementById("saveButton").textContent =
+    "Save Activity";
+
+  document.getElementById("cancelButton").hidden = true;
+
+  refreshDashboard();
+
+  alert("Activity saved successfully!");
+
+});
+
+function editActivity(id) {
+
+  const item = activities.find(a => a.id === id);
+
+  if (!item) return;
+
+  editingId = id;
+
+  document.getElementById("title").value = item.title;
+  document.getElementById("type").value = item.type;
+  document.getElementById("date").value = item.datetime.split("T")[0];
+  document.getElementById("time").value = item.datetime.split("T")[1];
+  document.getElementById("venue").value = item.venue;
+
+  document.getElementById("saveButton").textContent =
+    "Update Activity";
+
+  document.getElementById("cancelButton").hidden = false;
+
+  document.getElementById("activityForm").scrollIntoView({
+    behavior: "smooth"
+  });
+
+}
+
+function cancelEdit() {
+
+  editingId = null;
+
+  document.getElementById("activityForm").reset();
+
+  document.getElementById("saveButton").textContent =
+    "Save Activity";
+
+  document.getElementById("cancelButton").hidden = true;
+
+}
+
+function deleteActivity(id) {
+
+  if (!confirm("Are you sure you want to delete this activity?")) {
+    return;
+  }
+
+  activities = activities.filter(a => a.id !== id);
+
+  saveActivities();
+
+  refreshDashboard();
+
+}
+
+async function enableNotifications() {
+
+  if (!("Notification" in window)) {
+    alert("Notifications are not supported by this browser.");
+    return;
+  }
+
+  const permission = await Notification.requestPermission();
+
+  if (permission === "granted") {
+    document.getElementById("notificationStatus").textContent =
+      "Notifications enabled. Keep the app open for reminders.";
+  } else {
+    document.getElementById("notificationStatus").textContent =
+      "Notification permission was not granted.";
+  }
+
+}
+
+
+function checkReminders() {
+  const now = Date.now();
+
+  activities.forEach(item => {
+    const remaining = getDate(item).getTime() - now;
+
+    if (remaining > 0 && remaining <= 600000 &&
+        !notified.includes(item.id)) {
+
+      alert(
+        "Upcoming " + item.type + "!\n" +
+        item.title + " starts in 10 minutes."
+      );
+
+      notified.push(item.id);
+
+      localStorage.setItem(
+        "notified",
+        JSON.stringify(notified)
+      );
+
+    }
+
+  });
+
+}
+
+document.getElementById("today").textContent =
+  new Date().toDateString();
+
+const permissionText = document.getElementById("notificationStatus");
+
+if (permissionText) {
+  permissionText.textContent =
+    "In-App Reminders Active! Keep the app open to receive alerts when your activities are 10 minutes away.";
+}
+refreshDashboard();
+
+setInterval(() => {
+  updateCountdown();
+  checkReminders();
+}, 1000);
+
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("./service-worker.js")
+      .then(() => {
+        console.log("App service worker registered!");
+      })
+      .catch(error => {
+        console.log("Service worker registration failed:", error);
+      });
+  });
+}
+</script>
+</body>
+</html>
