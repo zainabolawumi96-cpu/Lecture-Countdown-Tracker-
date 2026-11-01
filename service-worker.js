@@ -1,11 +1,12 @@
-const CACHE_NAME = "lecture-tracker-v1";
+const CACHE_NAME = "lecture-tracker-v2";
 
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
-  "./manifest.json"
+  "./manifest.json",
+  "./icon-192.png",
+  "./icon-512.png"
 ];
-
 // Install and save app files
 self.addEventListener("install", event => {
   event.waitUntil(
